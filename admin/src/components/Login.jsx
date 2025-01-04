@@ -3,6 +3,7 @@ import axios from "axios";
 import { backendUrl } from "../App";
 import { toast } from "react-toastify";
 
+
 const Login = ({ setToken }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -14,18 +15,25 @@ const Login = ({ setToken }) => {
         email,
         password,
       });
-
+  
       if (response.data.success) {
         setToken(response.data.token);
-        toast.success("Success")
-      }else{
-        toast.error(response.data.message);
+        toast.success("Success");
+      } else if (response.data.message) {
+        toast.error(response.data.message); // Show backend error message
+      } else {
+        toast.error("An unexpected error occurred");
       }
     } catch (error) {
-        console.log(error);
-        toast.error(error.message)
+      console.log(error);
+      if (error.response && error.response.data && error.response.data.message) {
+        toast.error(error.response.data.message); // Show detailed error
+      } else {
+        toast.error(error.message || "Something went wrong");
+      }
     }
   };
+  
   return (
     <div className="min-h-screen flex items-center justify-center w-full">
       <div className="bg-white shadow-md rounded-lg px-8 py-6 max-w-md">

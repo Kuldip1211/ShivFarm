@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { backendUrl, currency } from "../App";
+// import { backendUrl, currency } from "../App";
 import { toast } from "react-toastify";
 import axios from "axios";
 
