@@ -8,8 +8,10 @@ const BestSeller = () => {
   const [bestSeller, setBestSeller] = useState([]);
 
   useEffect(() => {
+    console.log(products);
     const bestProduct = products.filter((item) => item.bestseller);
     setBestSeller(bestProduct.slice(0, 5));
+    console.log(bestProduct)
   }, [products]);
   return (
     <div className="my-10">
@@ -27,7 +29,7 @@ const BestSeller = () => {
         {bestSeller.map((item, index) => (
           <ProductItem
             key={index}
-            id={item._id}
+            id={item._id} 
             image={item.image}
             name={item.name}
             price={item.price}

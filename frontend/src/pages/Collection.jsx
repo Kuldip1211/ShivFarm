@@ -17,6 +17,7 @@ const Collection = () => {
   const toggleCategory = (e) => {
     if (category.includes(e.target.value)) {
       setCategory((prev) => prev.filter((item) => item !== e.target.value));
+      alert(category);
     } else {
       setCategory((prev) => [...prev, e.target.value]);
     }
@@ -92,43 +93,6 @@ const Collection = () => {
           />
         </p>
 
-        {/* Category Filter */}
-        <div
-          className={`border border-gray-300 pl-5 py-3 mt-6 ${
-            showFilter ? "" : "hidden"
-          } sm:block`}
-        >
-          <p className="mb-3 text-sm font-medium">CATEGORIES</p>
-          <div className="flex flex-col gap-2 text-sm font-light text-gray-700">
-            <p className="flex gap-2">
-              <input
-                className="w-3"
-                type="checkbox"
-                value={"Men"}
-                onChange={toggleCategory}
-              />
-              Men
-            </p>
-            <p className="flex gap-2">
-              <input
-                className="w-3"
-                type="checkbox"
-                value={"Women"}
-                onChange={toggleCategory}
-              />
-              Women
-            </p>
-            <p className="flex gap-2">
-              <input
-                className="w-3"
-                type="checkbox"
-                value={"Kids"}
-                onChange={toggleCategory}
-              />
-              Kids
-            </p>
-          </div>
-        </div>
 
         {/* SubCategory Filter */}
         <div
@@ -136,34 +100,128 @@ const Collection = () => {
             showFilter ? "" : "hidden"
           } sm:block`}
         >
-          <p className="mb-3 text-sm font-medium">TYPE</p>
+          <p className="mb-3 text-sm font-medium">Tees & Plants</p>
           <div className="flex flex-col gap-2 text-sm font-light text-gray-700">
             <p className="flex gap-2">
               <input
                 className="w-3"
                 type="checkbox"
-                value={"Topwear"}
+                value={"Trees"}
                 onChange={toggleSubCategory}
               />
-              Topwear
+              Trees
             </p>
             <p className="flex gap-2">
               <input
                 className="w-3"
                 type="checkbox"
-                value={"Bottomwear"}
+                value={"Flowering Plants"}
                 onChange={toggleSubCategory}
               />
-              Bottomwear
+              Flowering Plants
             </p>
             <p className="flex gap-2">
               <input
                 className="w-3"
                 type="checkbox"
-                value={"Winterwear"}
+                value={"Indoor"}
                 onChange={toggleSubCategory}
               />
-              Winterwear
+              Indoor Plants
+            </p>
+            <p className="flex gap-2">
+              <input
+                className="w-3"
+                type="checkbox"
+                value={"Outdoor Plants"}
+                onChange={toggleSubCategory}
+              />
+              Outdoor Plants
+            </p>
+            <p className="flex gap-2">
+              <input
+                className="w-3"
+                type="checkbox"
+                value={"Medicinal"}
+                onChange={toggleSubCategory}
+              />
+              Medicinal Plants
+            </p>
+          </div>
+        </div>
+
+        {/* sub seeds */}
+        <div
+          className={`border border-gray-300 pl-5 py-3 my-5 ${
+            showFilter ? "" : "hidden"
+          } sm:block`}
+        >
+          <p className="mb-3 text-sm font-medium">Seed</p>
+          <div className="flex flex-col gap-2 text-sm font-light text-gray-700">
+            <p className="flex gap-2">
+              <input
+                className="w-3"
+                type="checkbox"
+                value={"Flowers"}
+                onChange={toggleSubCategory}
+              />
+             Flower Seeds
+            </p>
+            <p className="flex gap-2">
+              <input
+                className="w-3"
+                type="checkbox"
+                value={"Vegetables"}
+                onChange={toggleSubCategory}
+              />
+              Vegetable Seeds
+            </p>
+            <p className="flex gap-2">
+              <input
+                className="w-3"
+                type="checkbox"
+                value={"Fruit"}
+                onChange={toggleSubCategory}
+              />
+              Fruit Seeds
+            </p>
+            <p className="flex gap-2">
+              <input
+                className="w-3"
+                type="checkbox"
+                value={"Herbs"}
+                onChange={toggleSubCategory}
+              />
+              Herb Seeds
+            </p>
+          </div>
+        </div>
+
+        {/* sub fertilize */}
+        <div
+          className={`border border-gray-300 pl-5 py-3 my-5 ${
+            showFilter ? "" : "hidden"
+          } sm:block`}
+        >
+          <p className="mb-3 text-sm font-medium">Fertilizer</p>
+          <div className="flex flex-col gap-2 text-sm font-light text-gray-700">
+            <p className="flex gap-2">
+              <input
+                className="w-3"
+                type="checkbox"
+                value={"Chemical"}
+                onChange={toggleSubCategory}
+              />
+              Chemical
+            </p>
+            <p className="flex gap-2">
+              <input
+                className="w-3"
+                type="checkbox"
+                value={"Organic"}
+                onChange={toggleSubCategory}
+              />
+              Organic
             </p>
           </div>
         </div>
