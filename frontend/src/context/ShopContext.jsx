@@ -14,6 +14,8 @@ const ShopContextProvider = (props) => {
   const [search,setSearch] = useState('');
   const [showSearch,setShowSearch] = useState(true);
   const [cartItems,setCartItems] = useState({});
+  const navigate = useNavigate();
+
   
   const addToCart = async(itemId,size)=>{
 
@@ -53,6 +55,24 @@ const ShopContextProvider = (props) => {
     return totalcount;
   };
 
+  const getCartAmount = () => {
+    let totalAmount = 0;
+    for (const items in cartItems) {
+      let itemInfo = products.find((product) => product._id === items);
+
+      for (const item in cartItems[items]) {
+        try {
+          if (cartItems[items][item] > 0) {
+            totalAmount += itemInfo.price * cartItems[items][item];
+          }
+        } catch (error) {
+          toast.error("Error while counting total amount in cart!");
+        }
+      }
+    }
+    return totalAmount;
+  };
+
   const updateQuantity = async (itemId, size, quantity) => {
     let cartData = structuredClone(cartItems);
 
@@ -62,7 +82,7 @@ const ShopContextProvider = (props) => {
   };
 
   const value = {
-    products,currency,delivery_fee,search,setSearch,showSearch,setShowSearch,getCartCount,addToCart,cartItems,setCartItems,updateQuantity
+    products,currency,delivery_fee,search,setSearch,showSearch,setShowSearch,getCartCount,addToCart,cartItems,setCartItems,updateQuantity,getCartAmount,navigate
   };
 
   return (
