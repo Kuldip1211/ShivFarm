@@ -3,27 +3,39 @@ import { assets } from "../assets/assets";
 import axios from "axios";
 import { backendUrl } from "../App";
 import { toast } from "react-toastify";
+import ClipLoader from "react-spinners/ClipLoader"; // Import the loader
 
 const Add = ({ token }) => {
   const [image1, setImage1] = useState(false);
-  const [image2, setImage2] = useState(false);
-  const [image3, setImage3] = useState(false);
-  const [image4, setImage4] = useState(false);
-
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
-  const [category, setCategory] = useState("Men");
-  const [subCategory, setSubCategory] = useState("Topwear");
+  const [category, setCategory] = useState("Plants & Trees");
+  const [subCategory, setSubCategory] = useState("Trees");
   const [bestseller, setBestseller] = useState(false);
   const [sizes, setSizes] = useState([]);
+  const [loading, setLoading] = useState(false); // Loader state
+
+  // Categories and Subcategories Map
+  const categories = {
+    "Plants & Trees": ["Trees", "Flowering Plants", "Indoor Plants", "Outdoor Plants"],
+    Seeds: ["Flower Seeds", "Vegetable Seeds", "Fruit Seeds", "Herb Seeds"],
+    Fertilizer: ["Chemical", "Organic"],
+  };
+
+  // Handle category change and update subcategories
+  const handleCategoryChange = (e) => {
+    const selectedCategory = e.target.value;
+    setCategory(selectedCategory);
+    setSubCategory(categories[selectedCategory][0]); // Set first subcategory as default
+  };
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
+    setLoading(true); // Show loader
 
     try {
       const formData = new FormData();
-
       formData.append("name", name);
       formData.append("description", description);
       formData.append("price", price);
@@ -35,7 +47,7 @@ const Add = ({ token }) => {
       image1 && formData.append("image1", image1);
 
       const response = await axios.post(
-        backendUrl + "/api/product/add",
+        `${backendUrl}/api/product/add`,
         formData,
         { headers: { token } }
       );
@@ -45,20 +57,19 @@ const Add = ({ token }) => {
         setName("");
         setDescription("");
         setImage1(false);
-        setImage2(false);
-        setImage3(false);
-        setImage4(false);
         setPrice("");
         setSizes([]);
         setBestseller(false);
-        setCategory("Men");
-        setSubCategory("Topwear");
+        setCategory("Plants & Trees");
+        setSubCategory("Trees");
       } else {
         toast.error(response.data.message);
       }
     } catch (error) {
       console.log(error);
       toast.error(error.message);
+    } finally {
+      setLoading(false); // Hide loader
     }
   };
 
@@ -67,6 +78,13 @@ const Add = ({ token }) => {
       onSubmit={onSubmitHandler}
       className="flex flex-col w-full items-start gap-3"
     >
+      {/* Loader */}
+      {loading && (
+        <div className="flex justify-center items-center fixed top-0 left-0 w-full h-full bg-opacity-50 bg-black z-50">
+          <ClipLoader color="#ffffff" size={80} />
+        </div>
+      )}
+
       <div>
         <p className="mb-2">Upload Image</p>
         <div className="flex gap-2">
@@ -114,12 +132,15 @@ const Add = ({ token }) => {
         <div>
           <p className="mb-2">Product Category</p>
           <select
-            onChange={(e) => setCategory(e.target.value)}
+            onChange={handleCategoryChange}
+            value={category}
             className="w-full px-3 py-2"
           >
-            <option value="Plants & Trees">Plants & Trees</option>
-            <option value="Seeds">Seeds</option>
-            <option value="Fertilizer">Fertilizer</option>
+            {Object.keys(categories).map((cat) => (
+              <option key={cat} value={cat}>
+                {cat}
+              </option>
+            ))}
           </select>
         </div>
 
@@ -127,11 +148,14 @@ const Add = ({ token }) => {
           <p className="mb-2">Sub Category</p>
           <select
             onChange={(e) => setSubCategory(e.target.value)}
+            value={subCategory}
             className="w-full px-3 py-2"
           >
-            <option value="Topwear">Topwear</option>
-            <option value="Bottomwear">Bottomwear</option>
-            <option value="Winterwear">Winterwear</option>
+            {categories[category]?.map((subCat) => (
+              <option key={subCat} value={subCat}>
+                {subCat}
+              </option>
+            ))}
           </select>
         </div>
 
@@ -150,95 +174,26 @@ const Add = ({ token }) => {
       <div>
         <p className="mb-2">Product Sizes</p>
         <div className="flex gap-3">
-          <div
-            onClick={() =>
-              setSizes((prev) =>
-                prev.includes("S")
-                  ? prev.filter((item) => item !== "S")
-                  : [...prev, "S"]
-              )
-            }
-          >
-            <p
-              className={`${
-                sizes.includes("S") ? "bg-pink-100" : "bg-slate-200"
-              } px-3 py-1 cursor-pointer`}
+          {["S", "M", "L", "XL", "XXL"].map((size) => (
+            <div
+              key={size}
+              onClick={() =>
+                setSizes((prev) =>
+                  prev.includes(size)
+                    ? prev.filter((item) => item !== size)
+                    : [...prev, size]
+                )
+              }
             >
-              S
-            </p>
-          </div>
-
-          <div
-            onClick={() =>
-              setSizes((prev) =>
-                prev.includes("M")
-                  ? prev.filter((item) => item !== "M")
-                  : [...prev, "M"]
-              )
-            }
-          >
-            <p
-              className={`${
-                sizes.includes("M") ? "bg-pink-100" : "bg-slate-200"
-              } px-3 py-1 cursor-pointer`}
-            >
-              M
-            </p>
-          </div>
-
-          <div
-            onClick={() =>
-              setSizes((prev) =>
-                prev.includes("L")
-                  ? prev.filter((item) => item !== "L")
-                  : [...prev, "L"]
-              )
-            }
-          >
-            <p
-              className={`${
-                sizes.includes("L") ? "bg-pink-100" : "bg-slate-200"
-              } px-3 py-1 cursor-pointer`}
-            >
-              L
-            </p>
-          </div>
-
-          <div
-            onClick={() =>
-              setSizes((prev) =>
-                prev.includes("XL")
-                  ? prev.filter((item) => item !== "XL")
-                  : [...prev, "XL"]
-              )
-            }
-          >
-            <p
-              className={`${
-                sizes.includes("XL") ? "bg-pink-100" : "bg-slate-200"
-              } px-3 py-1 cursor-pointer`}
-            >
-              XL
-            </p>
-          </div>
-
-          <div
-            onClick={() =>
-              setSizes((prev) =>
-                prev.includes("XXL")
-                  ? prev.filter((item) => item !== "XXL")
-                  : [...prev, "XXL"]
-              )
-            }
-          >
-            <p
-              className={`${
-                sizes.includes("XXL") ? "bg-pink-100" : "bg-slate-200"
-              } px-3 py-1 cursor-pointer`}
-            >
-              XXL
-            </p>
-          </div>
+              <p
+                className={`${
+                  sizes.includes(size) ? "bg-pink-100" : "bg-slate-200"
+                } px-3 py-1 cursor-pointer`}
+              >
+                {size}
+              </p>
+            </div>
+          ))}
         </div>
       </div>
 
@@ -257,10 +212,12 @@ const Add = ({ token }) => {
       <button
         className="w-28 py-3 mt-3 bg-black text-white rounded"
         type="submit"
+        disabled={loading} // Disable button during loading
       >
-        ADD
+        {loading ? "Adding..." : "ADD"}
       </button>
     </form>
   );
 };
+
 export default Add;

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-// import { backendUrl, currency } from "../App";
+import { backendUrl, } from "../App";
 import { toast } from "react-toastify";
 import axios from "axios";
 
@@ -22,8 +22,9 @@ const List = ({ token }) => {
   };
 
   const removeProduct = async (id) => {
+    alert(token);
     try {
-      const response = await axios.post(
+      const response = await axios.delete(
         backendUrl + "/api/product/remove",
         { id },
         { headers: { token } }
@@ -55,7 +56,7 @@ const List = ({ token }) => {
           <b>Name</b>
           <b>Category</b>
           <b>Price</b>
-          <b className="text-center">Action</b>
+          <b onClick={()=>removeProduct} className="text-center">Action</b>
         </div>
 
         {/* product list */}
@@ -68,7 +69,7 @@ const List = ({ token }) => {
             <p>{item.name}</p>
             <p>{item.category}</p>
             <p>
-              {currency}
+              {"$"}
               {item.price}
             </p>
             <p
