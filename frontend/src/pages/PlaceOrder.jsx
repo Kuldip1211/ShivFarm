@@ -10,7 +10,7 @@ const PlaceOrder = () => {
   const [method, setMethod] = useState("cod");
   const {
     navigate,
-    backendURL,
+    backendUrl,
     token,
     cartItems,
     setCartItems,
@@ -69,7 +69,7 @@ const PlaceOrder = () => {
       switch (method) {
         case "cod":
           const response = await axios.post(
-            backendURL + "/api/order/place",
+            backendUrl + "/api/order/place",
             orderData,
             { headers: { token } }
           );
@@ -84,7 +84,7 @@ const PlaceOrder = () => {
           break;
         case "stripe":
           const responseStripe = await axios.post(
-            backendURL + "/api/order/stripe",
+            backendUrl + "/api/order/stripe",
             orderData,
             { headers: { token } }
           );

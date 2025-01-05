@@ -89,6 +89,11 @@ const placeOrderStripe = async (req, res) => {
   }
 };
 
+// placing order with razorpay
+const placeOrderRazorpay = async(req,res)=>{
+
+}
+
 // verify stripe payment
 const verifyStripe = async (req, res) => {
   const { orderId, success, userId } = req.body;
@@ -150,6 +155,7 @@ export {
   placeOrderStripe,
   verifyStripe,
   allOrders,
+  placeOrderRazorpay,
   userOrders,
   updateStatus,
 };
