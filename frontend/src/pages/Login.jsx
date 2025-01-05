@@ -2,39 +2,46 @@ import { useContext, useEffect, useState } from "react";
 import { ShopContext } from "../context/ShopContext";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { PuffLoader } from "react-spinners"; // Import the loader
 
 const Login = () => {
   const [currentState, setCurrentState] = useState("Login");
 
-  const { navigate, backendURL, token, setToken } = useContext(ShopContext);
+  const { navigate, backendUrl, token, setToken } = useContext(ShopContext);
 
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false); // Loader state
 
   const onSubmitHandler = async (event) => {
     event.preventDefault();
-
+    setLoading(true); // Show loader
     try {
       if (currentState === "Sign Up") {
-        const response = await axios.post(backendURL + "/api/user/register", {
+        const response = await axios.post(backendUrl + "/api/user/register", {
           name,
           email,
           password,
         });
-        if(response.data.success){
-          setToken(response.data.token);
-          localStorage.setItem("token", response.data.token);
-          toast.success("Welcome to Forever!");
-        }else{
-          toast.error(response.data.message)
-        }
-      } else{
-        const response = await axios.post(backendURL + "/api/user/login",{email,password})
         if (response.data.success) {
           setToken(response.data.token);
           localStorage.setItem("token", response.data.token);
           toast.success("Welcome to Forever!");
+          navigate("/");
+        } else {
+          toast.error(response.data.message);
+        }
+      } else {
+        const response = await axios.post(backendUrl + "/api/user/login", {
+          email,
+          password,
+        });
+        if (response.data.success) {
+          setToken(response.data.token);
+          localStorage.setItem("token", response.data.token);
+          toast.success("Welcome to Forever!");
+          navigate("/");
         } else {
           toast.error(response.data.message);
         }
@@ -42,14 +49,17 @@ const Login = () => {
     } catch (error) {
       console.log(error);
       toast.error(error.message);
+    } finally {
+      setLoading(false); // Hide loader
     }
   };
 
   useEffect(() => {
-    if(token){
-      navigate('/')
+    if (token) {
+      navigate("/");
     }
-  },[token])
+  }, [token]);
+
   return (
     <form
       onSubmit={onSubmitHandler}
@@ -103,10 +113,18 @@ const Login = () => {
           </p>
         )}
       </div>
-      <button className="bg-black text-white font-light px-8 py-2 mt-4 rounded">
-        {currentState === "Login" ? "Sign In" : "Sign Up"}
-      </button>
+
+      {loading ? ( // Show loader if loading is true
+        <div className="flex justify-center mt-4">
+          <PuffLoader color="#000000" size={50} />
+        </div>
+      ) : (
+        <button className="bg-black text-white font-light px-8 py-2 mt-4 rounded">
+          {currentState === "Login" ? "Sign In" : "Sign Up"}
+        </button>
+      )}
     </form>
   );
 };
+
 export default Login;

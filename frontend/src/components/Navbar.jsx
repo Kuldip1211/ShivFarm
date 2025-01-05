@@ -1,35 +1,35 @@
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { assets } from "../assets/assets";
 import { useContext, useState } from "react";
 import { ShopContext } from "../context/ShopContext";
 
-
-
 const Navbar = () => {
   const [visible, setVisible] = useState(false);
-  const navigate = useNavigate();
+  const [dropdownVisible, setDropdownVisible] = useState(false); // ड्रॉपडाउन विज़िबिलिटी स्टेट
   const {
     setShowSearch,
     getCartCount,
-    // navigate,
-    // token,
-    // setToken,
-    // setCartItems,
+    navigate,
+    token,
+    setToken,
+    setCartItems,
   } = useContext(ShopContext);
 
   const logout = () => {
     navigate("/Login");
     localStorage.removeItem("token");
-    // setToken("");
-    // setCartItems({});
+    setToken("");
+    setCartItems({});
+    setDropdownVisible(false)
   };
+
   return (
     <div className="flex items-center justify-between py-5 font-medium">
       <Link to={"/"}>
         <img src={assets.logo} className="w-36" alt="" />
       </Link>
 
-      <ul className="hidden sm:flex gap-5 text-sm font-bold text-gray-700">
+      <ul className="hidden sm:flex gap-5 text-sm text-gray-700">
         <NavLink to={"/"} className="flex flex-col items-center gap-1">
           <p>HOME</p>
           <hr className="w-2/4 border-none h-[1.5px] bg-gray-700 hidden" />
@@ -62,35 +62,28 @@ const Navbar = () => {
           alt=""
         />
 
-        <div className="group relative">
+        <div className="relative">
           <img
             src={assets.profile_icon}
             className="w-5 cursor-pointer"
             alt=""
-            // onClick={() => (token ? null : navigate("/login"))}
+            onClick={() => {
+              if (token) {
+                setDropdownVisible((prev) => !prev); // ड्रॉपडाउन दिखाने/छिपाने का कार्य
+              } else {
+                navigate("/login");
+              }
+            }}
           />
-
-          {/* Dropdown menu */}
-          <div className="group-hover:block hidden absolute dropdown-menu right-0 pt-4">
-              <div className="flex flex-col gap-2 w-36 py-3 px-5 bg-slate-100 text-gray-500 rounded">
+          {dropdownVisible && ( // केवल तभी दिखेगा जब स्टेट true हो
+            <div className="absolute dropdown-menu left-1 pt-4">
+              <div className="flex flex-col gap-2 w-36 h-36 py-3 px-5 bg-slate-100 text-gray-500 rounded">
                 <p className="cursor-pointer hover:text-black">My Profile</p>
-                <p onClick={() => navigate('/orders')} className="cursor-pointer hover:text-black">Orders</p>
-                <p onClick={logout} className="cursor-pointer hover:text-black">
-                  Logout
-                </p>
+                <span onClick={()=>navigate("/orders")} className="cursor-pointer w-full"><p className=" text-center hover:text-black">Order</p></span>
+                <span onClick={logout} className="cursor-pointer w-full"><p className=" text-center hover:text-black">Logout</p></span>
               </div>
             </div>
-          {/* {token && (
-            <div className="group-hover:block hidden absolute dropdown-menu right-0 pt-4">
-              <div className="flex flex-col gap-2 w-36 py-3 px-5 bg-slate-100 text-gray-500 rounded">
-                <p className="cursor-pointer hover:text-black">My Profile</p>
-                <p onClick={() => navigate('/orders')} className="cursor-pointer hover:text-black">Orders</p>
-                <p onClick={logout} className="cursor-pointer hover:text-black">
-                  Logout
-                </p>
-              </div>
-            </div>
-          )} */}
+          )}
         </div>
         <Link to={"/cart"} className="relative">
           <img src={assets.cart_icon} className="w-5 min-w-5" alt="" />
@@ -158,4 +151,5 @@ const Navbar = () => {
     </div>
   );
 };
+
 export default Navbar;

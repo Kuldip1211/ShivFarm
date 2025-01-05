@@ -18,7 +18,7 @@ const Add = ({ token }) => {
 
   // Categories and Subcategories Map
   const categories = {
-    "Plants & Trees": ["Trees", "Flowering Plants", "Indoor Plants", "Outdoor Plants"],
+    "Plants & Trees": ["Trees", "Flowering Plants", "Indoor Plants", "Outdoor Plants","Medicinal"],
     Seeds: ["Flower Seeds", "Vegetable Seeds", "Fruit Seeds", "Herb Seeds"],
     Fertilizer: ["Chemical", "Organic"],
   };

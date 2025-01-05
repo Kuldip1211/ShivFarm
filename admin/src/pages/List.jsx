@@ -22,17 +22,15 @@ const List = ({ token }) => {
   };
 
   const removeProduct = async (id) => {
-    alert(token);
     try {
-      const response = await axios.delete(
-        backendUrl + "/api/product/remove",
-        { id },
-        { headers: { token } }
-      );
-
+      const response = await axios.delete(`${backendUrl}/api/product/remove`, {
+        headers: { token },
+        data: { id }, // Pass id in the request body
+      });
+  
       if (response.data.success) {
         toast.success(response.data.message);
-        await fetchList();
+        await fetchList(); // Refresh product list after successful deletion
       } else {
         toast.error(response.data.message);
       }

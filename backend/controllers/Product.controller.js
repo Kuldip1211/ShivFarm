@@ -68,11 +68,28 @@ const listProducts = async (req, res) => {
 };
 const removeProduct = async (req, res) => {
   try {
-    await productModel.findByIdAndDelete(req.body.id);
+    const productId = req.body.id; // Extract id from request body
+
+    if (!productId) {
+      return res.status(400).json({
+        success: false,
+        message: "Product ID is required!",
+      });
+    }
+
+    const deletedProduct = await productModel.findByIdAndDelete(productId);
+
+    if (!deletedProduct) {
+      return res.status(404).json({
+        success: false,
+        message: "Product not found!",
+      });
+    }
+
     res.json({ success: true, message: "Product deleted successfully!" });
   } catch (error) {
     console.log(error);
-    res.json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: error.message });
   }
 };
 const singleProduct = async (req, res) => {

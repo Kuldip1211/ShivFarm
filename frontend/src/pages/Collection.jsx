@@ -124,7 +124,7 @@ const Collection = () => {
               <input
                 className="w-3"
                 type="checkbox"
-                value={"Indoor"}
+                value={"Indoor Plants"}
                 onChange={toggleSubCategory}
               />
               Indoor Plants

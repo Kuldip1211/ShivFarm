@@ -1,9 +1,7 @@
-import { createContext, useState} from "react";
+import { createContext, useEffect, useState} from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-
-import { products } from "../assets/assets";
 
 
 export const ShopContext = createContext();
@@ -14,7 +12,10 @@ const ShopContextProvider = (props) => {
   const [search,setSearch] = useState('');
   const [showSearch,setShowSearch] = useState(true);
   const [cartItems,setCartItems] = useState({});
+  const [token,setToken] =  useState('')
+  const[products,setProducts] = useState([]);
   const navigate = useNavigate();
+  const backendUrl= import.meta.env.VITE_BACKEND_URL;
 
   
   const addToCart = async(itemId,size)=>{
@@ -31,11 +32,13 @@ const ShopContextProvider = (props) => {
       } else {
         cartData[itemId][size] = 1;
       }
+      
     } else {
       cartData[itemId] = {};
       cartData[itemId][size] = 1;
     }
     setCartItems(cartData);
+    toast.success("Added");
 
   }
 
@@ -73,6 +76,31 @@ const ShopContextProvider = (props) => {
     return totalAmount;
   };
 
+  // get product data
+  const getProductsdata = async () => {
+    try {
+      const response = await axios.get(backendUrl + "/api/product/list");
+      if (response.data.success) {
+        setProducts(response.data.products);
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message);
+    }
+  };
+
+  useEffect(() => {
+    getProductsdata();
+  }, []);
+
+  useEffect(() => {
+    if (!token && localStorage.getItem("token")) {
+      setToken(localStorage.getItem("token"));
+    }
+  }, []);
+
   const updateQuantity = async (itemId, size, quantity) => {
     let cartData = structuredClone(cartItems);
 
@@ -82,7 +110,7 @@ const ShopContextProvider = (props) => {
   };
 
   const value = {
-    products,currency,delivery_fee,search,setSearch,showSearch,setShowSearch,getCartCount,addToCart,cartItems,setCartItems,updateQuantity,getCartAmount,navigate
+    products,currency,delivery_fee,search,setSearch,showSearch,setShowSearch,getCartCount,addToCart,cartItems,setCartItems,updateQuantity,getCartAmount,navigate,backendUrl,getProductsdata,token,setToken
   };
 
   return (
