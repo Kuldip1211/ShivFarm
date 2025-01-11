@@ -16,6 +16,7 @@ const ShopContextProvider = (props) => {
   const[products,setProducts] = useState([]);
   const navigate = useNavigate();
   const backendUrl= import.meta.env.VITE_BACKEND_URL;
+  const[userID , setUSerID] = useState('');
 
   
   const addToCart = async(itemId,size)=>{
@@ -43,7 +44,7 @@ const ShopContextProvider = (props) => {
       try {
         await axios.post(
           backendUrl + "/api/cart/add",
-          { itemId, size },
+          { userId : userID , itemId, size },
           { headers: { token } }
         );
       } catch (error) {
@@ -117,37 +118,40 @@ const ShopContextProvider = (props) => {
 
   const updateQuantity = async (itemId, size, quantity) => {
     let cartData = structuredClone(cartItems);
-
     cartData[itemId][size] = quantity;
     setCartItems(cartData);
-
-    
+  
     if (token) {
       try {
+  
+        console.log(userID)
+  
         await axios.post(
           backendUrl + "/api/cart/update",
           {
+            userId : userID, // Include the userId in the request
             itemId,
             size,
             quantity,
           },
           { headers: { token } }
         );
+  
+        toast.success("Cart updated!");
       } catch (error) {
-        console.log(error);
-        toast.error(error.message);
+        console.error(error);
+        toast.error(error.message || "Failed to update cart");
       }
+    } else {
+      toast.error("User is not authenticated");
     }
-    toast.success("Cart updated!");
-    return;
-
   };
 
   const getUserCart = async (token) => {
     try {
       const response = await axios.post(
         backendUrl + "/api/cart/get",
-        {},
+        { userId : userID},
         { headers: { token } }
       );
 
@@ -161,12 +165,13 @@ const ShopContextProvider = (props) => {
   };
 
   const value = {
-    products,currency,delivery_fee,search,setSearch,showSearch,setShowSearch,getCartCount,addToCart,cartItems,setCartItems,updateQuantity,getCartAmount,navigate,backendUrl,getProductsdata,token,setToken,getUserCart
+    products,currency,delivery_fee,search,setSearch,showSearch,setShowSearch,getCartCount,addToCart,cartItems,setCartItems,updateQuantity,getCartAmount,navigate,backendUrl,getProductsdata,token,setToken,getUserCart,setUSerID,userID
   };
 
   return (
     <ShopContext.Provider value={value}>{props.children}</ShopContext.Provider>
   );
 };
+
 
 export default ShopContextProvider;

@@ -95,6 +95,8 @@ const PlaceOrder = () => {
           } else {
             toast.error(responseStripe.data.message);
           }
+
+          navigate("/orders");
           break;
         default:
           break;
@@ -248,7 +250,8 @@ const PlaceOrder = () => {
           </div>
           <div className="w-full text-end mt-8">
             <button
-              onClick={()=>navigate("/orders")}
+              type="submit"
+              onSubmit={onSubmitHandler}
               className="bg-black text-white px-11 py-3 text-sm rounded-lg"
             >
               PLACE ORDER

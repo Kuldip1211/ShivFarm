@@ -5,7 +5,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 const Orders = () => {
-  const { backendURL,token, currency } = useContext(ShopContext);
+  const { backendUrl,token, currency } = useContext(ShopContext);
   const [orderData, setOrderData] = useState([])
 
   const loadOrderData = async () => {
@@ -13,7 +13,7 @@ const Orders = () => {
       if(!token){
         return null;
       }
-      const response = await axios.post(backendURL + '/api/order/userorders',{},{headers:{token}})
+      const response = await axios.post(backendUrl + '/api/order/userorders',{},{headers:{token}})
 
       // console.log(response.data);
       

@@ -7,7 +7,7 @@ import { PuffLoader } from "react-spinners"; // Import the loader
 const Login = () => {
   const [currentState, setCurrentState] = useState("Login");
 
-  const { navigate, backendUrl, token, setToken } = useContext(ShopContext);
+  const { navigate, backendUrl, token, setToken,setUserID } = useContext(ShopContext);
 
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
@@ -27,6 +27,7 @@ const Login = () => {
         if (response.data.success) {
           setToken(response.data.token);
           localStorage.setItem("token", response.data.token);
+          setUserID(response.data.id);
           toast.success("Welcome to Forever!");
           navigate("/");
         } else {

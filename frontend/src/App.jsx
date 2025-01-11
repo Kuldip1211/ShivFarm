@@ -14,6 +14,7 @@ import SearchBar from "./components/SearchBar";
 import { Slide, ToastContainer} from "react-toastify"; 
 import "react-toastify/dist/ReactToastify.css";
 import Verify from "./pages/Verify";
+import OTPVerification from "./pages/VerifyOtp";
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
         <Route path="/place-order" element={<PlaceOrder />} />
         <Route path="/orders" element={<Orders />} />
         <Route path="/verify" element={<Verify />} />
+        <Route path="/verifyotp" element={<OTPVerification />} />
       </Routes>
       <Footer />
     </div>
